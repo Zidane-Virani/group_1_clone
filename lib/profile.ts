@@ -17,13 +17,32 @@ export async function getUserProfile(
     .eq("id", userId)
     .single();
 
-  if (error || !data) {
-    throw new Error(error?.message ?? "Profile not found");
+  if (data) {
+    return {
+      name: String(data.name ?? ""),
+      role: String(data.role ?? "REP").toUpperCase(),
+      kogbucks_balance: Number(data.kogbucks_balance ?? 0),
+    };
   }
 
-  return {
-    name: String(data.name ?? ""),
-    role: String(data.role ?? "REP").toUpperCase(),
-    kogbucks_balance: Number(data.kogbucks_balance ?? 0),
-  };
+  // Profile doesn't exist yet — create a default one
+  if (error && error.code === "PGRST116") {
+    const { data: newProfile, error: insertError } = await client
+      .from("profiles")
+      .upsert({ id: userId, name: "", role: "REP", kogbucks_balance: 0 })
+      .select("name, role, kogbucks_balance")
+      .single();
+
+    if (insertError || !newProfile) {
+      throw new Error(insertError?.message ?? "Failed to create profile");
+    }
+
+    return {
+      name: String(newProfile.name ?? ""),
+      role: String(newProfile.role ?? "REP").toUpperCase(),
+      kogbucks_balance: Number(newProfile.kogbucks_balance ?? 0),
+    };
+  }
+
+  throw new Error(error?.message ?? "Profile not found");
 }
