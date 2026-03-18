@@ -20,7 +20,8 @@ export async function GET(req: Request): Promise<NextResponse> {
   try {
     const profile: UserProfile = await getUserProfile(
       auth.user.id,
-      auth.serverSupabase
+      auth.serverSupabase,
+      auth.user.email ?? ""
     );
 
     const response: ProfileResponse = {

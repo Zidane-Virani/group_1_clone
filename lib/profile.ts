@@ -9,7 +9,8 @@ export interface UserProfile {
 
 export async function getUserProfile(
   userId: string,
-  client: SupabaseClient = supabase
+  client: SupabaseClient = supabase,
+  email?: string
 ): Promise<UserProfile> {
   const { data, error } = await client
     .from("profiles")
@@ -29,7 +30,13 @@ export async function getUserProfile(
   if (error && error.code === "PGRST116") {
     const { data: newProfile, error: insertError } = await client
       .from("profiles")
-      .upsert({ id: userId, name: "", role: "REP", kogbucks_balance: 0 })
+      .upsert({
+        id: userId,
+        email: email ?? "",
+        name: email?.split("@")[0] ?? "",
+        role: "REP",
+        kogbucks_balance: 500,
+      })
       .select("name, role, kogbucks_balance")
       .single();
 
