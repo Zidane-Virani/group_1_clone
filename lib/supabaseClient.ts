@@ -42,8 +42,26 @@ export function createServerSupabaseClient(
     });
   }
 
-  const { url, anonKey } = getSupabaseConfig();
+  const { url } = getSupabaseConfig();
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY ?? "";
 
+  // Use service role key on the server to bypass RLS
+  if (serviceRoleKey) {
+    return createClient(url, serviceRoleKey, {
+      auth: { persistSession: false },
+      ...(accessToken
+        ? {
+            global: {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            },
+          }
+        : {}),
+    });
+  }
+
+  const { anonKey } = getSupabaseConfig();
   return createClient(
     url,
     anonKey,
