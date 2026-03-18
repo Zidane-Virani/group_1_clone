@@ -33,6 +33,7 @@ export async function getUserProfile(
       .upsert({
         id: userId,
         email: email ?? "",
+        full_name: email?.split("@")[0] ?? "",
         name: email?.split("@")[0] ?? "",
         role: "REP",
         kogbucks_balance: 500,
