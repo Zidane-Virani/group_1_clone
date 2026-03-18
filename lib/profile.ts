@@ -35,7 +35,7 @@ export async function getUserProfile(
         email: email ?? "",
         full_name: email?.split("@")[0] ?? "",
         name: email?.split("@")[0] ?? "",
-        role: "REP",
+        role: "rep",
         kogbucks_balance: 500,
       })
       .select("name, role, kogbucks_balance")
