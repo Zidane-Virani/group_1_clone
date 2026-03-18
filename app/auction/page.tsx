@@ -230,14 +230,22 @@ export default function AuctionPage() {
                   </p>
                 ) : null}
                 {profile?.role.includes("ADMIN") ? (
-                  <button
-                    type="button"
-                    onClick={finalizeAuction}
-                    disabled={finalizing}
-                    className="rounded-full border border-stone-900/15 px-4 py-2 text-sm font-semibold uppercase tracking-[0.2em] text-stone-900 disabled:opacity-60"
-                  >
-                    {finalizing ? "Closing..." : "Close auction"}
-                  </button>
+                  <>
+                    <Link
+                      href="/auctions/create"
+                      className="rounded-full border border-stone-900/15 px-4 py-2 text-sm font-semibold uppercase tracking-[0.2em] text-stone-900"
+                    >
+                      Create Auction
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={finalizeAuction}
+                      disabled={finalizing}
+                      className="rounded-full border border-stone-900/15 px-4 py-2 text-sm font-semibold uppercase tracking-[0.2em] text-stone-900 disabled:opacity-60"
+                    >
+                      {finalizing ? "Closing..." : "Close auction"}
+                    </button>
+                  </>
                 ) : null}
               </div>
             </>
